@@ -1,2 +1,2 @@
 # SimpleFileExplore
-Support choose a folder or file easier
+Support choose the path of a folder or file easier
