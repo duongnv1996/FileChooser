@@ -232,7 +232,11 @@ public class GetPathUtils {
     }
 
     private static boolean isExternalStorageRemovable(File fileDir) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        String path = fileDir.getPath();
+        String[] segments = path.split(File.separator);
+        return segments.length > 2 && segments[2].matches("^\\w{4}-\\w{4}$");
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return Environment.isExternalStorageRemovable(fileDir);
         } else {
             String path = fileDir.getPath();
@@ -241,7 +245,7 @@ public class GetPathUtils {
                 return segments[2].matches("^\\w{4}-\\w{4}$");
             }
         }
-        return false;
+        return false;*/
     }
 
     public static String getFileName(Uri uri) {
