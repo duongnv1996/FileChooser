@@ -1,0 +1,14 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kimcy929.simplefileexplorelib">
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".SimpleDirectoryChooserActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/lib_name"/>
+    </application>
+
+</manifest>
