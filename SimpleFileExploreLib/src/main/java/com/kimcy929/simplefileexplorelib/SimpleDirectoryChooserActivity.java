@@ -269,7 +269,7 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.new_folder_layout, null, false);
         final EditText editText = view.findViewById(R.id.editNewFolder);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(SimpleDirectoryChooserActivity.this, R.style.MyAlertDialogAppCompatStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.create_new_folder)
                 .setView(view)
                 .setPositiveButton(R.string.ok_title, new DialogInterface.OnClickListener() {
