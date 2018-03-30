@@ -83,7 +83,9 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
 
         getDirAndSegment(initDirectory);
 
-        Timber.plant(new Timber.DebugTree());
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 
     private void getInit() {
