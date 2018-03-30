@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -212,16 +213,15 @@ public class GetPathUtils {
         return rootPath.toString();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static List<File> getListRemovableStorage(Context context) {
 
         List<File> paths = new ArrayList<>();
 
         File[] externalFilesDirs = ContextCompat.getExternalFilesDirs(context, null);
         for (File fileDir : externalFilesDirs) {
-            if (Environment.isExternalStorageRemovable(fileDir)) {
-                Timber.d("ext-raw-path -> %s", fileDir.getAbsolutePath());
+            if (isExternalStorageRemovable(fileDir)) {
                 String path = fileDir.getPath();
+                Timber.d("Removable path -> %s", path);
                 if (path.contains("/Android")) {
                     paths.add(new File(path.substring(0, path.indexOf("/Android"))));
                 }
@@ -229,6 +229,19 @@ public class GetPathUtils {
         }
 
         return paths;
+    }
+
+    private static boolean isExternalStorageRemovable(File fileDir) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return Environment.isExternalStorageRemovable(fileDir);
+        } else {
+            String path = fileDir.getPath();
+            String[] segments = path.split(File.separator);
+            if (segments.length > 2) {
+                return segments[2].matches("^\\w{4}-\\w{4}$");
+            }
+        }
+        return false;
     }
 
     public static String getFileName(Uri uri) {
