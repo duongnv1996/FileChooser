@@ -7,7 +7,7 @@
 
         <activity
             android:name=".SimpleDirectoryChooserActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/SimpleFileExploreBaseTheme.NoActionBar"
             android:label="@string/lib_name"/>
     </application>
 

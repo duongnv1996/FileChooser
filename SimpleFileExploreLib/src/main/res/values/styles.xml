@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+    <style name="SimpleFileExploreBaseTheme" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/accentColor</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="SimpleFileExploreBaseTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorAccent">@color/accentColor</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" />
+    <style name="SimpleFileExploreBaseTheme.AppBarOverlay" />
 
     <style name="MyButtonStyle">
         <item name="android:layout_width">wrap_content</item>
