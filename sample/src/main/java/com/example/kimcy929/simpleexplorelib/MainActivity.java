@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kimcy929.simplefileexplorelib.SimpleDirectoryChooserActivity;
+import com.kimcy929.simple_file_chooser.SimpleDirectoryChooserActivity;
 
 public class MainActivity extends AppCompatActivity {
 

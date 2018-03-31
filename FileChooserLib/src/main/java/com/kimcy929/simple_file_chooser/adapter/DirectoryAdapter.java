@@ -1,4 +1,4 @@
-package com.kimcy929.simplefileexplorelib.adapter;
+package com.kimcy929.simple_file_chooser.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kimcy929.simplefileexplorelib.R;
+import com.kimcy929.simple_file_chooser.R;
 
 import java.io.File;
 import java.util.List;

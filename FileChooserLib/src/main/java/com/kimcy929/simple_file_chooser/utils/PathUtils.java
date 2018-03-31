@@ -1,4 +1,4 @@
-package com.kimcy929.simplefileexplorelib.utils;
+package com.kimcy929.simple_file_chooser.utils;
 
 import android.annotation.TargetApi;
 import android.content.ContentUris;

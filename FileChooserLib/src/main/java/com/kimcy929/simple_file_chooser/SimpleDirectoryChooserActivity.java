@@ -1,4 +1,4 @@
-package com.kimcy929.simplefileexplorelib;
+package com.kimcy929.simple_file_chooser;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,9 +28,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kimcy929.simplefileexplorelib.adapter.DirectoryAdapter;
-import com.kimcy929.simplefileexplorelib.adapter.SegmentAdapter;
-import com.kimcy929.simplefileexplorelib.utils.PathUtils;
+import com.kimcy929.simple_file_chooser.adapter.DirectoryAdapter;
+import com.kimcy929.simple_file_chooser.adapter.SegmentAdapter;
+import com.kimcy929.simple_file_chooser.utils.PathUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

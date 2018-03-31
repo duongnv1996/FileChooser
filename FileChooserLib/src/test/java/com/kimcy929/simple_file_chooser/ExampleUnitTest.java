@@ -1,4 +1,4 @@
-package com.kimcy929.simplefileexplorelib;
+package com.kimcy929.simple_file_chooser;
 
 import org.junit.Test;
 
