@@ -218,11 +218,13 @@ public class PathUtils {
 
         File[] externalFilesDirs = ContextCompat.getExternalFilesDirs(context, null);
         for (File fileDir : externalFilesDirs) {
-            if (isExternalStorageRemovable(fileDir)) {
-                String path = fileDir.getPath();
-                Timber.d("Removable path -> %s", path);
-                if (path.contains("/Android")) {
-                    paths.add(new File(path.substring(0, path.indexOf("/Android"))));
+            if (fileDir != null) {
+                if (isExternalStorageRemovable(fileDir)) {
+                    String path = fileDir.getPath();
+                    Timber.d("Removable path -> %s", path);
+                    if (path.contains("/Android")) {
+                        paths.add(new File(path.substring(0, path.indexOf("/Android"))));
+                    }
                 }
             }
         }
