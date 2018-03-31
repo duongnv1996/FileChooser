@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -26,7 +25,7 @@ import timber.log.Timber;
 
 
 @SuppressWarnings("WeakerAccess")
-public class GetPathUtils {
+public class PathUtils {
 
     private static final String PATH_TREE = "tree";
     private static final String PRIMARY_TYPE = "primary";
@@ -232,20 +231,20 @@ public class GetPathUtils {
     }
 
     private static boolean isExternalStorageRemovable(File fileDir) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                return Environment.isExternalStorageRemovable(fileDir);
+            } catch (Exception e) {
+                Timber.e("Error check remove storage -> %s", e.toString());
+            }
+        }
+        return hasRemoveStorage(fileDir);
+    }
+
+    private static boolean hasRemoveStorage(File fileDir) {
         String path = fileDir.getPath();
         String[] segments = path.split(File.separator);
         return segments.length > 2 && segments[2].matches("^\\w{4}-\\w{4}$");
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return Environment.isExternalStorageRemovable(fileDir);
-        } else {
-            String path = fileDir.getPath();
-            String[] segments = path.split(File.separator);
-            if (segments.length > 2) {
-                return segments[2].matches("^\\w{4}-\\w{4}$");
-            }
-        }
-        return false;*/
     }
 
     public static String getFileName(Uri uri) {

@@ -5,15 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.kimcy929.simplefileexplorelib.adapter.DirectoryAdapter;
 import com.kimcy929.simplefileexplorelib.adapter.SegmentAdapter;
-import com.kimcy929.simplefileexplorelib.utils.GetPathUtils;
+import com.kimcy929.simplefileexplorelib.utils.PathUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -54,6 +54,7 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     private AppCompatButton btnCancel;
 
     private RecyclerView recyclerViewPathSegment;
+    private RecyclerView recyclerViewDir;
 
     private DirectoryAdapter directoryAdapter;
     private SegmentAdapter segmentAdapter;
@@ -62,6 +63,8 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     private String initDirectory = Environment.getExternalStorageDirectory().getPath();
 
     private boolean isChooseFile;
+
+    private ArrayMap<String, Integer> cachePositions = new ArrayMap<>(); // Pair<File.getPath(), position)
 
     public static final String INIT_DIRECTORY_EXTRA = "INIT_DIRECTORY_EXTRA";
     public static final String RESULT_DIRECTORY_EXTRA = "RESULT_DIRECTORY_EXTRA";
@@ -148,7 +151,8 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         btnConfirm.setOnClickListener(myOnClickListener);
         btnCancel.setOnClickListener(myOnClickListener);
 
-        RecyclerView recyclerViewDir = findViewById(R.id.recyclerViewDir);
+        recyclerViewDir = findViewById(R.id.recyclerViewDir);
+        recyclerViewDir.setItemAnimator(new DefaultItemAnimator());
         directoryAdapter = new DirectoryAdapter();
         directoryAdapter.setOnItemClickListener(this);
         recyclerViewDir.setAdapter(directoryAdapter);
@@ -156,13 +160,14 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         recyclerViewPathSegment = findViewById(R.id.recyclerViewPathSegment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPathSegment.setLayoutManager(layoutManager);
+        recyclerViewPathSegment.setItemAnimator(new DefaultItemAnimator());
         segmentAdapter = new SegmentAdapter();
         segmentAdapter.setOnItemClickListener(this);
         recyclerViewPathSegment.setAdapter(segmentAdapter);
     }
 
     private void showDialogRemovableStorage() {
-        List<File> listRemovableStorage = GetPathUtils.getListRemovableStorage(getApplicationContext());
+        List<File> listRemovableStorage = PathUtils.getListRemovableStorage(getApplicationContext());
         if (listRemovableStorage.size() == 1) {
             getDirAndSegment(listRemovableStorage.get(0).getPath());
             return;
@@ -380,8 +385,9 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<File> files) {
             super.onPostExecute(files);
-            if (activityWeakReference.get() != null) {
-                activityWeakReference.get().directoryAdapter.addFolders(files);
+            SimpleDirectoryChooserActivity activity = activityWeakReference.get();
+            if (activity != null) {
+                activity.directoryAdapter.addFolders(files, activity.txtCurrentPath);
             }
         }
     }
@@ -419,35 +425,50 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         }
     }
 
-
     //For adapter
-
     @Override
     public void pathSegmentClick(String path) {
         getDirAndSegment(path);
     }
 
     @Override
-    public void scrollToLast() {
+    public void scrollToLastSegment() {
         try {
             recyclerViewPathSegment.smoothScrollToPosition(segmentAdapter.getItemCount());
         } catch (Exception e) {
-            Timber.e("Error scroll recyclerview!");
+            Timber.e("Error scroll recyclerViewPathSegment!");
         }
     }
 
     @Override
-    public void itemClick(File file) {
+    public void directoryItemClick(File file, int position) {
+        String path = file.getPath();
         if (file.isDirectory()) {
             if (file.canRead()) {
-                getDirAndSegment(file.getPath());
+                cachePositions.put(txtCurrentPath, position);
+                getDirAndSegment(path);
             }
         } else {
             if (isChooseFile) {
                 Intent intent = new Intent();
-                intent.putExtra(RESULT_FILE_EXTRA, file.getPath());
+                intent.putExtra(RESULT_FILE_EXTRA, path);
                 setResult(RESULT_CODE_FILE_SELECTED, intent);
                 finish();
+            }
+        }
+    }
+
+    @Override
+    public void scrollToLastPosition(String path) {
+        if (cachePositions.containsKey(path)) {
+            Integer position = cachePositions.get(path);
+            if (position != null) {
+                try {
+                    recyclerViewDir.scrollToPosition(position);
+                } catch (Exception e) {
+                    Timber.e("Error scroll recyclerViewDir!");
+                }
+                cachePositions.remove(path);
             }
         }
     }

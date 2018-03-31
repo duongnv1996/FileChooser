@@ -36,9 +36,10 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
         return folderList != null ? folderList.size() : 0;
     }
 
-    public void addFolders(List<File> data) {
+    public void addFolders(List<File> data, String path) {
         folderList = data;
         notifyDataSetChanged();
+        onItemClickListener.scrollToLastPosition(path);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -56,7 +57,8 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.itemClick(folderList.get(getAdapterPosition()));
+                    int adapterPosition = getAdapterPosition();
+                    onItemClickListener.directoryItemClick(folderList.get(adapterPosition), adapterPosition);
                 }
             });
         }
@@ -76,6 +78,7 @@ public class DirectoryAdapter extends RecyclerView.Adapter<DirectoryAdapter.View
     }
 
     public interface OnItemClickListener {
-        void itemClick(File file);
+        void directoryItemClick(File file, int position);
+        void scrollToLastPosition(String path);
     }
 }

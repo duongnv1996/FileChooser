@@ -1,12 +1,8 @@
 package com.kimcy929.simplefileexplorelib.adapter;
 
-import android.content.Context;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,7 +14,6 @@ import android.widget.TextView;
 import com.kimcy929.simplefileexplorelib.R;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import timber.log.Timber;
@@ -27,8 +22,6 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
     private List<String> segmentList;
 
     private OnItemClickListener onItemClickListener;
-
-    //private DiffTask diffTask;
 
     @NonNull
     @Override
@@ -51,32 +44,24 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
     public void addPathSegments(List<String> newData) {
         segmentList = newData;
         notifyDataSetChanged();
-        onItemClickListener.scrollToLast();
+        onItemClickListener.scrollToLastSegment();
+
         /*if(segmentList == null) {
            if (newData != null) {
                segmentList = newData;
                notifyDataSetChanged();
+               onItemClickListener.scrollToLastSegment();
            }
         } else {
             if (newData == null) {
                 segmentList.clear();
                 notifyDataSetChanged();
             } else {
-                segmentList.clear();
-                segmentList.addAll(newData);
-                notifyItemRangeInserted(0, newData.size());
-
                 diffTask = new DiffTask(this);
                 diffTask.execute(newData);
             }
         }*/
     }
-
-    /*public void cancelDiffTask() {
-        if (diffTask != null && !diffTask.isCancelled()) {
-            diffTask.cancel(true);
-        }
-    }*/
 
     @SuppressWarnings("WeakerAccess")
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -101,6 +86,16 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
                     }
                     onItemClickListener.pathSegmentClick(pathBuilder.toString());
                 }
+
+                /*private void removeRangeItem(int adapterPosition) {
+                    int j = 0;
+                    int size = segmentList.size();
+                    for (int i = adapterPosition + 1; i < size; ++i) {
+                        segmentList.remove(i - j);
+                        ++j;
+                    }
+                    notifyItemRangeRemoved(adapterPosition + 1, size);
+                }*/
             });
         }
 
@@ -111,6 +106,8 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
             } else {
                 txtSegment.setText(R.string.root_folder_name);
             }
+
+            Timber.d("position -> %s, itemCount %s", position, getItemCount());
 
             if (position < getItemCount() - 1) {
                 imageArrowIcon.setVisibility(View.VISIBLE);
@@ -132,10 +129,19 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
 
     public interface OnItemClickListener {
         void pathSegmentClick(String path);
-        void scrollToLast();
+        void scrollToLastSegment();
     }
 
-    /*private static class SegmentDiff extends DiffUtil.Callback {
+    /*
+    private DiffTask diffTask;
+
+    public void cancelDiffTask() {
+        if (diffTask != null && !diffTask.isCancelled()) {
+            diffTask.cancel(true);
+        }
+    }
+
+    private static class SegmentDiff extends DiffUtil.Callback {
 
         private List<String> oldSegment;
         private List<String> newSegment;
@@ -163,11 +169,19 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return areItemsTheSame(oldItemPosition, newItemPosition);
+            return false;
         }
-    }*/
 
-    /*private static class DiffTask extends AsyncTask<List<String>, Void, DiffUtil.DiffResult> {
+        @Nullable
+        @Override
+        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+            Timber.d("oldItemPosition %s, newItemPosition %s", oldItemPosition, newItemPosition);
+            Timber.d("getOldSize %s, getNewSize %s", getOldListSize(), getNewListSize());
+            return super.getChangePayload(oldItemPosition, newItemPosition);
+        }
+    }
+
+    private static class DiffTask extends AsyncTask<List<String>, Void, DiffUtil.DiffResult> {
         private WeakReference<SegmentAdapter> segmentAdapterWeakReference;
         private List<String> newData;
 
@@ -197,7 +211,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.ViewHold
 
                 diffResult.dispatchUpdatesTo(segmentAdapter);
 
-                segmentAdapter.onItemClickListener.scrollToLast();
+                segmentAdapter.onItemClickListener.scrollToLastSegment();
             }
         }
     }*/
