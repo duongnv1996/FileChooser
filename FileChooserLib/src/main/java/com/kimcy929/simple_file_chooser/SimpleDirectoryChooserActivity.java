@@ -67,11 +67,12 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     private ArrayMap<String, Integer> cachePositions = new ArrayMap<>(); // Pair<File.getPath(), position)
 
     public static final String INIT_DIRECTORY_EXTRA = "INIT_DIRECTORY_EXTRA";
-    public static final String RESULT_DIRECTORY_EXTRA = "RESULT_DIRECTORY_EXTRA";
-    public static final int RESULT_CODE_DIRECTORY_SELECTED = 8;
-
     public static final String CHOOSE_FILE_EXTRA = "CHOOSE_FILE_EXTRA";
+
+    public static final String RESULT_DIRECTORY_EXTRA = "RESULT_DIRECTORY_EXTRA";
     public static final String RESULT_FILE_EXTRA = "RESULT_FILE_EXTRA";
+
+    public static final int RESULT_CODE_DIRECTORY_SELECTED = 8;
     public static final int RESULT_CODE_FILE_SELECTED = 9;
 
     @Override
