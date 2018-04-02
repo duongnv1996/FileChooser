@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kimcy929.simple_file_chooser.SimpleDirectoryChooserActivity;
+import com.kimcy929.simple_file_chooser.FileChooserActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,16 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void chooseDirectory() {
         if (checkStoragePermissions()) {
-            Intent directoryIntent = new Intent(this, SimpleDirectoryChooserActivity.class);
-            directoryIntent.putExtra(SimpleDirectoryChooserActivity.INIT_DIRECTORY_EXTRA, Environment.getExternalStorageDirectory().getPath());
+            Intent directoryIntent = new Intent(this, FileChooserActivity.class);
+            directoryIntent.putExtra(FileChooserActivity.INIT_DIRECTORY_EXTRA, Environment.getExternalStorageDirectory().getPath());
+            directoryIntent.putExtra(FileChooserActivity.GET_ONLY_DIRECTORY_PATH_FILE_EXTRA, false); //true if you take create only a path
             startActivityForResult(directoryIntent, REQUEST_DIRECTORY);
         }
     }
 
     private void chooseFile() {
         if (checkStoragePermissions()) {
-            Intent fileIntent = new Intent(this, SimpleDirectoryChooserActivity.class);
-            fileIntent.putExtra(SimpleDirectoryChooserActivity.CHOOSE_FILE_EXTRA, true);
+            Intent fileIntent = new Intent(this, FileChooserActivity.class);
+            fileIntent.putExtra(FileChooserActivity.CHOOSE_FILE_EXTRA, true);
             startActivityForResult(fileIntent, REQUEST_FILE);
         }
     }
@@ -77,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_DIRECTORY) {
-            if (resultCode == SimpleDirectoryChooserActivity.RESULT_CODE_DIRECTORY_SELECTED) {
-                String newPath = data.getStringExtra(SimpleDirectoryChooserActivity.RESULT_DIRECTORY_EXTRA);
+            if (resultCode == FileChooserActivity.RESULT_CODE_DIRECTORY_SELECTED) {
+                String newPath = data.getStringExtra(FileChooserActivity.RESULT_DIRECTORY_EXTRA);
                 txtPath.setText(newPath);
             }
         } else if (requestCode == REQUEST_FILE) {
-            if (resultCode == SimpleDirectoryChooserActivity.RESULT_CODE_FILE_SELECTED) {
-                String newPath = data.getStringExtra(SimpleDirectoryChooserActivity.RESULT_FILE_EXTRA);
+            if (resultCode == FileChooserActivity.RESULT_CODE_FILE_SELECTED) {
+                String newPath = data.getStringExtra(FileChooserActivity.RESULT_FILE_EXTRA);
                 txtPath.setText(newPath);
             }
         }
