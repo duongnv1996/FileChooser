@@ -5,7 +5,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name="com.kimcy929.simple_file_chooser.SimpleDirectoryChooserActivity"
+            android:name="com.kimcy929.simple_file_chooser.FileChooserActivity"
             android:theme="@style/SimpleFileExploreBaseTheme.NoActionBar"
             android:label="@string/lib_name"/>
     </application>
