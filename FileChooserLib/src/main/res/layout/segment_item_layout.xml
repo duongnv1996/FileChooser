@@ -4,19 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/dimen_4dp"
-    android:paddingEnd="@dimen/dimen_4dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:minHeight="?attr/listPreferredItemHeightSmall"
-    android:background="?attr/selectableItemBackground">
+    android:minHeight="?attr/listPreferredItemHeightSmall">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/txtSegment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="@tools:sample/full_names"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"/>
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        tools:text="@tools:sample/full_names"/>
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageArrowIcon"

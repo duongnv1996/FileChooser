@@ -1,5 +1,5 @@
 <resources>
-    <string name="lib_name">SimpleFileExplore</string>
+    <string name="lib_name">FileChooser</string>
     <string name="root_folder_name">Root</string>
     <string name="root_directory">Root directory</string>
     <string name="confirm">CONFIRM</string>

@@ -20,9 +20,4 @@
         android:title="@string/removable_storage"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
-
-    <item android:id="@+id/menu_root_directory"
-        android:icon="@drawable/ic_hashtag_black_24dp"
-        android:title="@string/root_directory"
-        app:showAsAction="ifRoom"/>
 </menu>
