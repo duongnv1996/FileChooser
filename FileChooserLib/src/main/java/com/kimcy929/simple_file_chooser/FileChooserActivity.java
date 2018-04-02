@@ -13,7 +13,6 @@ import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,14 +41,10 @@ import java.util.List;
 import timber.log.Timber;
 
 
-public class SimpleDirectoryChooserActivity extends AppCompatActivity
+public class FileChooserActivity extends AppCompatActivity
         implements DirectoryAdapter.OnItemClickListener,
                     SegmentAdapter.OnItemClickListener {
 
-    /*
-    private AppCompatTextView txtCurrentPath;
-    private AppCompatImageView btnBackFolder;
-    private AppCompatImageView btnNewFolder;*/
     private AppCompatButton btnConfirm;
     private AppCompatButton btnCancel;
 
@@ -63,11 +58,13 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     private String initDirectory = Environment.getExternalStorageDirectory().getPath();
 
     private boolean isChooseFile;
+    private boolean isGetOnlyDirectoryPath;
 
     private ArrayMap<String, Integer> cachePositions = new ArrayMap<>(); // Pair<File.getPath(), position)
 
     public static final String INIT_DIRECTORY_EXTRA = "INIT_DIRECTORY_EXTRA";
     public static final String CHOOSE_FILE_EXTRA = "CHOOSE_FILE_EXTRA";
+    public static final String GET_ONLY_DIRECTORY_PATH_FILE_EXTRA = "GET_ONLY_DIRECTORY_PATH_FILE_EXTRA";
 
     public static final String RESULT_DIRECTORY_EXTRA = "RESULT_DIRECTORY_EXTRA";
     public static final String RESULT_FILE_EXTRA = "RESULT_FILE_EXTRA";
@@ -100,6 +97,7 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
                 initDirectory = directory;
             }
             isChooseFile = intent.getBooleanExtra(CHOOSE_FILE_EXTRA, false);
+            isGetOnlyDirectoryPath = intent.getBooleanExtra(GET_ONLY_DIRECTORY_PATH_FILE_EXTRA, false);
         }
 
     }
@@ -122,9 +120,6 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         } else if (menuId == R.id.menu_removable_storage) {
             showDialogRemovableStorage();
 
-        } else if (menuId == R.id.menu_root_directory) {
-            getDirAndSegment(File.separator);
-
         } else if (menuId == R.id.menu_new_folder) {
             showDialogCreateNewFolder();
         }
@@ -133,13 +128,10 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     }
 
     private void initView() {
-        //txtCurrentPath = findViewById(R.id.txtCurrentPath);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*btnBackFolder = findViewById(R.id.btnBackFolder);
-        btnBackFolder.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
-        btnNewFolder = findViewById(R.id.btnNewFolder);*/
         btnConfirm = findViewById(R.id.btnConfirm);
         btnCancel = findViewById(R.id.btnCancel);
 
@@ -147,13 +139,10 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
             btnConfirm.setVisibility(View.GONE);
         }
 
-        /*btnBackFolder.setOnClickListener(myOnClickListener);
-        btnNewFolder.setOnClickListener(myOnClickListener);*/
         btnConfirm.setOnClickListener(myOnClickListener);
         btnCancel.setOnClickListener(myOnClickListener);
 
         recyclerViewDir = findViewById(R.id.recyclerViewDir);
-        recyclerViewDir.setItemAnimator(new DefaultItemAnimator());
         directoryAdapter = new DirectoryAdapter();
         directoryAdapter.setOnItemClickListener(this);
         recyclerViewDir.setAdapter(directoryAdapter);
@@ -161,7 +150,6 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         recyclerViewPathSegment = findViewById(R.id.recyclerViewPathSegment);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPathSegment.setLayoutManager(layoutManager);
-        recyclerViewPathSegment.setItemAnimator(new DefaultItemAnimator());
         segmentAdapter = new SegmentAdapter();
         segmentAdapter.setOnItemClickListener(this);
         recyclerViewPathSegment.setAdapter(segmentAdapter);
@@ -238,36 +226,30 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             int id = v.getId();
-            /*if (id == btnBackFolder.getId()) {
-                File file = new File(txtCurrentPath).getParentFile();
-                if (file != null && file.isDirectory()) {
-                    getDirAndSegment(file.getPath());
-                }
-
-            } else if (id == btnNewFolder.getId()) {
-                if (new File(txtCurrentPath).canWrite()) {
-                    showDialogCreateNewFolder();
-                } else {
-                    Toast.makeText(SimpleDirectoryChooserActivity.this, R.string.can_not_create_new_folder, Toast.LENGTH_SHORT).show();
-                }
-
-            } else*/
 
             if (id == btnConfirm.getId()) {
                 if (!isChooseFile) {
-                    if (new File(txtCurrentPath).canWrite()) {
-                        Intent intent = new Intent();
-                        intent.putExtra(RESULT_DIRECTORY_EXTRA, txtCurrentPath);
-                        setResult(RESULT_CODE_DIRECTORY_SELECTED, intent);
-                        finish();
+                    if (isGetOnlyDirectoryPath) {
+                        returnDirectoryPath();
                     } else {
-                        Toast.makeText(SimpleDirectoryChooserActivity.this, R.string.can_not_write_data, Toast.LENGTH_SHORT).show();
+                        if (new File(txtCurrentPath).canWrite()) {
+                            returnDirectoryPath();
+                        } else {
+                            Toast.makeText(FileChooserActivity.this, R.string.can_not_write_data, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             } else if (id == btnCancel.getId()) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
+        }
+
+        private void returnDirectoryPath() {
+            Intent intent = new Intent();
+            intent.putExtra(RESULT_DIRECTORY_EXTRA, txtCurrentPath);
+            setResult(RESULT_CODE_DIRECTORY_SELECTED, intent);
+            finish();
         }
     };
 
@@ -303,11 +285,7 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
 
     private void getDirAndSegment(String dirPath) {
 
-        if (!TextUtils.equals(File.separator, dirPath)) {
-            txtCurrentPath = dirPath;
-        } else {
-            txtCurrentPath = File.separator;
-        }
+        txtCurrentPath = dirPath;
 
         getAllSegments(dirPath);
 
@@ -316,15 +294,14 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
 
     private void getDirectoryFromFile(String dirPath) {
         File file = new File(dirPath);
-        if (file.canWrite()) {
+        if (file.canWrite() || isGetOnlyDirectoryPath) {
             int accentColor = ContextCompat.getColor(this, R.color.accentColor);
-            //btnNewFolder.setColorFilter(accentColor);
             btnConfirm.setTextColor(accentColor);
         } else {
             btnConfirm.setTextColor(Color.BLACK);
-            //btnNewFolder.setColorFilter(null);
         }
 
+        Timber.d("Load file  -> %s", dirPath);
         loadFilesTask = new LoadFilesTask(this);
         loadFilesTask.execute(dirPath);
     }
@@ -332,14 +309,13 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     private void getAllSegments(String dirPath) {
         String[] pathSegments = dirPath.split(File.separator);
         List<String> segmentList = new ArrayList<>();
+        segmentList.add(File.separator);
         if (pathSegments.length != 0) {
             for (String segment : pathSegments) {
                 if (!TextUtils.isEmpty(segment)) {
                     segmentList.add(segment);
                 }
             }
-        } else {
-            segmentList.add(File.separator);
         }
         segmentAdapter.addPathSegments(segmentList);
     }
@@ -348,10 +324,10 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
 
     private static class LoadFilesTask extends AsyncTask<String, Void, List<File>> {
 
-        private WeakReference<SimpleDirectoryChooserActivity> activityWeakReference;
+        private WeakReference<FileChooserActivity> activityWeakReference;
 
         @SuppressWarnings("WeakerAccess")
-        public LoadFilesTask(SimpleDirectoryChooserActivity activity) {
+        public LoadFilesTask(FileChooserActivity activity) {
             activityWeakReference = new WeakReference<>(activity);
         }
 
@@ -386,7 +362,7 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<File> files) {
             super.onPostExecute(files);
-            SimpleDirectoryChooserActivity activity = activityWeakReference.get();
+            FileChooserActivity activity = activityWeakReference.get();
             if (activity != null) {
                 activity.directoryAdapter.addFolders(files, activity.txtCurrentPath);
             }
@@ -416,10 +392,6 @@ public class SimpleDirectoryChooserActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        /*if (segmentAdapter != null) {
-            segmentAdapter.cancelDiffTask();
-        }*/
 
         if (loadFilesTask != null && !loadFilesTask.isCancelled()) {
             loadFilesTask.cancel(true);
