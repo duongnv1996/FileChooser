@@ -1,4 +1,4 @@
-package com.example.kimcy929.simpleexplorelib;
+package com.example.kimcy929.filechooser;
 
 import android.Manifest;
 import android.content.Intent;

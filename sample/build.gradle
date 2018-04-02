@@ -8,7 +8,7 @@ android {
         minSdkVersion rootProject.MIN_SDK_VERSION
         targetSdkVersion rootProject.TARGET_SDK_VERSION
 
-        applicationId "com.example.kimcy929.simpleexplorelib"
+        applicationId "com.example.kimcy929.filechooser"
 
         versionCode 1
         versionName "1.0"
