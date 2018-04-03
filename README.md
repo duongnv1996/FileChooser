@@ -3,7 +3,7 @@ Support choose the path of a folder or file easier
 
 Download
 
-Use grandle:
+Use gradle:
 ```gradle
 repositories {
   mavenCentral()
