@@ -6,7 +6,7 @@
 
         <activity
             android:name="com.kimcy929.simple_file_chooser.FileChooserActivity"
-            android:theme="@style/SimpleFileExploreBaseTheme.NoActionBar"
+            android:theme="@style/FileChooserBaseTheme.NoActionBar"
             android:label="@string/lib_name"/>
     </application>
 
