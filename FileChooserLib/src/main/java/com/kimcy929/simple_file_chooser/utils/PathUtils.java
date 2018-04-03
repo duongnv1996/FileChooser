@@ -17,8 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
  * Created by Kimcy929 on 13/03/2018.
  */
@@ -221,7 +219,6 @@ public class PathUtils {
             if (fileDir != null) {
                 if (isExternalStorageRemovable(fileDir)) {
                     String path = fileDir.getPath();
-                    Timber.d("Removable path -> %s", path);
                     if (path.contains("/Android")) {
                         paths.add(new File(path.substring(0, path.indexOf("/Android"))));
                     }
@@ -237,7 +234,7 @@ public class PathUtils {
             try {
                 return Environment.isExternalStorageRemovable(fileDir);
             } catch (Exception e) {
-                Timber.e("Error check remove storage -> %s", e.toString());
+                e.printStackTrace();
             }
         }
         return hasRemoveStorage(fileDir);

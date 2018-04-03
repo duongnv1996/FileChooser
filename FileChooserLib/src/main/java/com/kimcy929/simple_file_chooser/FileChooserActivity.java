@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,12 +39,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import timber.log.Timber;
-
 
 public class FileChooserActivity extends AppCompatActivity
         implements DirectoryAdapter.OnItemClickListener,
                     SegmentAdapter.OnItemClickListener {
+
+    private static final String TAG = FileChooserActivity.class.getSimpleName();
 
     private AppCompatButton btnConfirm;
     private AppCompatButton btnCancel;
@@ -83,10 +84,6 @@ public class FileChooserActivity extends AppCompatActivity
         initView();
 
         getDirAndSegment(initDirectory);
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
     }
 
     private void getInit() {
@@ -275,7 +272,7 @@ public class FileChooserActivity extends AppCompatActivity
                                 }
                             }
                         } else {
-                            Timber.d("A folder name is empty!");
+                            Log.d(TAG, "A folder name is empty!");
                         }
                     }
                 })
@@ -301,7 +298,6 @@ public class FileChooserActivity extends AppCompatActivity
             btnConfirm.setTextColor(Color.BLACK);
         }
 
-        Timber.d("Load file  -> %s", dirPath);
         loadFilesTask = new LoadFilesTask(this);
         loadFilesTask.execute(dirPath);
     }
@@ -409,7 +405,7 @@ public class FileChooserActivity extends AppCompatActivity
         try {
             recyclerViewPathSegment.smoothScrollToPosition(segmentAdapter.getItemCount());
         } catch (Exception e) {
-            Timber.e("Error scroll recyclerViewPathSegment!");
+            e.printStackTrace();
         }
     }
 
@@ -439,7 +435,7 @@ public class FileChooserActivity extends AppCompatActivity
                 try {
                     recyclerViewDir.scrollToPosition(position);
                 } catch (Exception e) {
-                    Timber.e("Error scroll recyclerViewDir!");
+                    e.printStackTrace();
                 }
                 cachePositions.remove(path);
             }

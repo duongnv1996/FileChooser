@@ -50,7 +50,6 @@ dependencies {
     implementation "com.android.support:design:$rootProject.APPCOMPAT_VERSION"
     implementation "com.android.support:appcompat-v7:$rootProject.APPCOMPAT_VERSION"
     implementation "com.android.support:recyclerview-v7:$rootProject.APPCOMPAT_VERSION"
-    implementation 'com.jakewharton.timber:timber:4.7.0'
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
