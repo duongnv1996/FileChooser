@@ -5,22 +5,33 @@ Download
 
 Use gradle:
 ```gradle
-repositories {
-  mavenCentral()
-  google()
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        //Add jitpack.io
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 dependencies {
-  implementation 'com.kimcy929.filechooser:simple-file-chooser:1.0.0'
+  implementation 'com.github.kimcy929:FileChooser:v1.0.1'
 }
 ```
 or Maven:
 ```xml
-<dependency> 
-  <groupId>com.kimcy929.filechooser</groupId> 
-  <artifactId>simple-file-chooser</artifactId> 
-  <version>1.0.0</version> 
-  <type>pom</type> 
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+```xml
+<dependency>
+    <groupId>com.github.kimcy929</groupId>
+    <artifactId>FileChooser</artifactId>
+    <version>v1.0.1</version>
 </dependency>
 ```
 How to I use this lib?
